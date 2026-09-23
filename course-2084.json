@@ -2,8 +2,8 @@
   "schema": 1,
   "courseId": 2084,
   "repository": "LearningOS/2026a-rustling-SlieNce810",
-  "commit": "3d259edf863edec840e9ba8efdb99d5a6eaa8e2e",
-  "score": 46,
+  "commit": "e81a97b2f46b720bea1c68d10832a84ad14b4e92",
+  "score": 49,
   "totalScore": 110,
   "exercises": [
     {
@@ -331,23 +331,23 @@
     {
       "name": "quiz2",
       "max": 1,
-      "score": 0,
-      "status": "fail",
-      "exitCode": 1
+      "score": 1,
+      "status": "pass",
+      "exitCode": 0
     },
     {
       "name": "options1",
       "max": 1,
-      "score": 0,
-      "status": "fail",
-      "exitCode": 1
+      "score": 1,
+      "status": "pass",
+      "exitCode": 0
     },
     {
       "name": "options2",
       "max": 1,
-      "score": 0,
-      "status": "fail",
-      "exitCode": 1
+      "score": 1,
+      "status": "pass",
+      "exitCode": 0
     },
     {
       "name": "options3",
@@ -778,9 +778,9 @@
     }
   ],
   "student": "SlieNce810",
-  "runId": "35867671649",
+  "runId": "35872150315",
   "runAttempt": "1",
   "upload": {
-    "status": "accepted"
+    "status": "pending"
   }
 }
