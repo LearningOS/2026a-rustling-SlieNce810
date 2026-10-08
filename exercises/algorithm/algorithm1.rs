@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -69,14 +69,84 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(mut list_a:LinkedList<T>,mut list_b:LinkedList<T>) -> Self where T: Ord,
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+            // 1. 保存合并后的总长度
+        let total = list_a.length
+            .checked_add(list_b.length)
+            .expect("list length overflow");
+
+        // 2. 取出两个链表的头节点和尾节点信息
+        let mut a = list_a.start.take();
+        let mut b = list_b.start.take();
+
+        let end_a = list_a.end.take();
+        let end_b = list_b.end.take();
+
+        // 原链表不再管理这些节点
+        list_a.length = 0;
+        list_b.length = 0;
+
+        let mut result = Self::new();
+
+        // 3. 两条链表都还有节点时，比较头节点
+        while let (Some(pa), Some(pb)) = (a, b) {
+            // SAFETY: pa、pb 指向有效、已初始化的独立节点。
+            let take_a = unsafe {
+                pa.as_ref().val <= pb.as_ref().val
+            };
+
+            // 4. 选择较小节点，并推进对应的游标
+            let mut chosen = if take_a {
+                a = unsafe { pa.as_ref().next };
+                pa
+            } else {
+                b = unsafe { pb.as_ref().next };
+                pb
+            };
+
+            // 5. 断开选中节点的旧 next
+            // SAFETY: chosen 是有效且由合并过程独占管理的节点。
+            unsafe {
+                chosen.as_mut().next = None;
+            }
+
+            // 6. 将 chosen 接到结果链表尾部
+            match result.end {
+                None => result.start = Some(chosen),
+                Some(mut tail) => unsafe {
+                    // SAFETY: tail 是结果链表的有效尾节点，
+                    // 此时没有其他活跃引用访问该节点。
+                    tail.as_mut().next = Some(chosen);
+                },
+            }
+
+            result.end = Some(chosen);
         }
+
+        // 7. 至少一个输入链表已经耗尽，
+        //    找到另一条链表剩余的节点。
+        let (rest, last) = if a.is_some() {
+            (a, end_a)
+        } else {
+            (b, end_b)
+        };
+
+        // 8. 直接接上剩余链表
+        match result.end {
+            None => result.start = rest,
+            Some(mut tail) => unsafe {
+                // SAFETY: tail 是有效尾节点，rest 是未处理的独立链。
+                tail.as_mut().next = rest;
+            },
+        }
+
+        if rest.is_some() {
+            result.end = last;
+        }
+
+        result.length = total;
+        result
 	}
 }
 
