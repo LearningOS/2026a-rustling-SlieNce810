@@ -72,7 +72,11 @@ impl<T> myStack<T> {
         std::mem::swap(&mut self.q1, &mut self.q2);
     }
     pub fn pop(&mut self) -> Result<T, &str> {
-        self.q1.dequeue()
+        if self.q1.is_empty() {
+            Err("Stack is empty")
+        } else {
+            self.q1.dequeue()
+        }
     }
     pub fn is_empty(&self) -> bool {
         self.q1.is_empty()
